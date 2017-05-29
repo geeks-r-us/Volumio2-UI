@@ -188,5 +188,12 @@
   "SIDEMENU": {
     "ANALOG_INPUT": "ANALOG INPUT",
     "BLUETOOTH": "BLUETOOTH"
+  },
+  "BLUETOOTH": {
+    "AUDIO":"Audio Device",
+    "COMPUTER":"Computer",
+    "CONNECT":"Connect",
+    "DISCONNECT":"Disconnect",
+    "REFRESH":"Refresh"
   }
 }

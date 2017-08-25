@@ -15,7 +15,11 @@ class BluetoothPluginController {
   }
 
   refreshBluetoothDevices() {
-    this.socketService.emit('getBluetoothDevices', '');
+    this.socketService.emit('callMethod', {
+      "endpoint" : "audio_interface/bluetooth_controller", 
+      "method" : "getBluetoothDevices", 
+      "data" : {}
+    });
   }
 
   registerListner() {
@@ -29,17 +33,25 @@ class BluetoothPluginController {
   }
 
   initService() {
-    this.socketService.emit('getBluetoothDevices');
+    this.refreshBluetoothDevices();
   }
 
   connectDevice(mac) {
-    this.socketService.emit('connectBluetoothDevice', mac);
-    refreshBluetoothDevices();
+    this.socketService.emit("callMethod", {
+      "endpoint" : "audio_interface/bluetooth_controller", 
+      "method" : "connectBluetoothDevice",
+      "data" : {mac}
+    }); 
+    this.refreshBluetoothDevices();
   }
 
   disconnectDevice(mac) {
-    this.socketService.emit('disconnectBluetoothDevice', mac);
-    refreshBluetoothDevices();
+    this.socketService.emit("callMethod", {
+      "endpoint" : "audio_interface/bluetooth_controller", 
+      "method" : "disconnectBluetoothDevice",
+      "data" : {mac}
+    }); 
+    this.refreshBluetoothDevices();
   }
 }
 

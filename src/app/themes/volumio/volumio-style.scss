@@ -86,6 +86,10 @@ $alert-info-bg: $theme-dark-color;
 $alert-info-text: $theme-text-color;
 $alert-info-border: $theme-primary-color;
 
+//Socials
+$fb-color: #3b5998;
+$twitter-color: #4099FF;
+
 /*!
  * Bootstrap v3.3.5 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.
@@ -368,6 +372,11 @@ table {
   animation-direction: reverse !important;
 }
 
+//Loading bar
+#loading-bar .bar {
+  background-color: $theme-primary-color;
+}
+
 //Select override
 .ui-select-toggle, .ui-select-container, .ui-select-match {
   background-color: $theme-accent-color;
@@ -449,7 +458,7 @@ li.list-group-item {
   top: 0px;
   width: 170px;
   height: 170px;
-  background-color: #222;
+  background-color: $knob-content-background-color;
   border-radius: 150px;
   pointer-events: none;
   z-index: 10;
@@ -601,7 +610,7 @@ ul {
   padding: 40px 0px;
   border: dotted 1px grey;
   &.dragover {
-    border: dotted 1px #54C698;
+    border: dotted 1px $theme-primary-color;
   }
 }
 
@@ -673,7 +682,7 @@ div#installed-plugin-lists {
   padding-bottom: 15px;
   padding-top: 25px;
   font-size: 16px;
-  border-bottom: 1px solid #54C698;
+  border-bottom: 1px solid $theme-primary-color;
   }
 
 div#list-group {
@@ -716,4 +725,21 @@ span {
   	left: 3px;
   	color: $theme-dark-color;
   }
+}
+
+body.noScroll { /* ...or body.dialogShowing */
+  overflow: hidden;
+}
+
+img.section-image {
+    max-height: 18px;
+}
+
+.panel-body a {
+    color: $theme-text-color;
+    font-weight: bold;
+}
+
+p.lead {
+    text-align: center;
 }

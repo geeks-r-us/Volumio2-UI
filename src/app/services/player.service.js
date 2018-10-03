@@ -22,10 +22,15 @@ class PlayerService {
 
     this._volume = 80;
     this._volumeStep = 10;
+    this.mute = undefined;
+    this.disableVolumeControl = false;
 
     this._shuffle = false;
     this._repeatTrack = false;
     this._repeatAlbum = false;
+
+    this.localVolume = 0;
+    this.lastVolumeUpdateTime = -1000;
 
     this.init();
     $rootScope.$on('socket:init', () => {
@@ -41,6 +46,11 @@ class PlayerService {
   play() {
     this.$log.debug('play');
     this.socketService.emit('play');
+  }
+
+  volatilePlay() {
+    this.$log.debug('volatilePlay');
+    this.socketService.emit('volatilePlay');
   }
 
   pause() {
@@ -92,7 +102,7 @@ class PlayerService {
   }
 
   set seek(val) {
-    if (this.state) {
+    if (this.state && !this.state.disableUi) {
       this.stopSeek();
       // if (val === 0) {
       //   val = 1;
@@ -139,13 +149,10 @@ class PlayerService {
       hours = momentDuration.hours(),
       minutes = momentDuration.minutes(),
       seconds = momentDuration.seconds();
-    if (this.hours > 0) {
-      this.elapsedTimeString = hours + ':' + minutes + ':' +
-        ((seconds < 10) ? ('0' + seconds) : seconds);
-    } else {
-      this.elapsedTimeString = minutes + ':' +
-        ((seconds < 10) ? ('0' + seconds) : seconds);
-    }
+    // Track length is shown as mm:ss - do the same for elapsed time
+    minutes += hours*60;
+    this.elapsedTimeString = minutes + ':' +
+                             ((seconds < 10) ? ('0' + seconds) : seconds);
   }
 
   startSeek() {
@@ -173,7 +180,7 @@ class PlayerService {
 
 
     // GETTER & SETTER ---------------------------------------------------------
-  get volume() {
+  get remoteVolume() {
     if (this.state) {
       return parseInt(this.state.volume);
     } else {
@@ -181,14 +188,29 @@ class PlayerService {
     }
   }
 
-  set volume(volume) {
+  set remoteVolume(volume) {
     if (volume < 0) {
       volume = 0;
     } else if (volume > 100) {
       volume = 100;
     }
-    this.$log.log('volume', volume);
+    this.$log.debug('volume', volume);
     this.socketService.emit('volume', volume);
+  }
+
+  get volume(){
+    if(Date.now() - this.lastVolumeUpdateTime > 1000){
+      this.localVolume = this.remoteVolume;
+    }
+    return this.localVolume;
+  }
+
+  set volume(volume){
+    if(Date.now() - this.lastVolumeUpdateTime > 100 && this.localVolume !== volume){
+      this.lastVolumeUpdateTime = Date.now();
+      this.remoteVolume = volume;
+    }
+    this.localVolume = volume;
   }
 
   get albumart() {
@@ -290,7 +312,18 @@ class PlayerService {
         case 'spotify':
         case 'wav':
         case 'wawpack':
+        case 'airplay':
+        case 'YouTube':
+        case 'rr':
+        case 'bt':
+        case 'cd':
+        case 'tidal':
+        case 'qobuz':
+        case 'mg':
+        case 'mb':
         case 'wma':
+        case 'qobuz':
+        case 'tidal':
           this.state.fileFormat = {
             url: this.state.trackType,
             name: this.state.trackType
@@ -308,8 +341,7 @@ class PlayerService {
     this.socketService.on('pushState', (data) => {
       this.$log.debug('pushState', data);
       this.state = data;
-
-      this.state.disableUi = this.state.service === 'airplay' || this.state.service === 'analogin';
+      this.state.disableUi = this.state.disableUiControls || this.state.service === 'analogin';
 
       this.elapsedTime = this.state.seek;
       if (this.state.status === 'play') {
@@ -331,6 +363,8 @@ class PlayerService {
         this.elapsedTimeString = undefined;
         this.songLength = undefined;
       }
+      this.mute = data.mute;
+      this.disableVolumeControl = data.disableVolumeControl;
 
       //Forward emit event
       this.$rootScope.$broadcast('socket:pushState', this.state);

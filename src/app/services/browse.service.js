@@ -52,10 +52,21 @@ class BrowseService {
     this.$log.debug('fetchLibrary', obj);
     this.currentFetchRequest = item;
     this.socketService.emit('browseLibrary', obj);
-    this.isBrowsing = true;
+    if (!item.static) {
+      this.isBrowsing = true;
+    }
     if (!back) {
       this.scrollPositions.delete(item.uri);
     }
+  }
+
+  sendEject(data) {
+    this.socketService.emit('callMethod', data);
+    this.backHome();
+  }
+
+  sendRip(data) {
+    this.socketService.emit('callMethod', data);
   }
 
   backHome() {
@@ -174,21 +185,40 @@ class BrowseService {
       this.filters = data;
     });
     this.socketService.on('pushBrowseSources', (data) => {
-      this.$log.debug('pushBrowseSources', data);
       this.availableListViews = ['list'];
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].albumart) {
+          data[i].albumart = this.getSourcesAlbumart(data[i].albumart);
+        }
+      }
       this.sources = data;
+      this.$log.debug('pushBrowseSources', data);
     });
     this.socketService.on('pushBrowseLibrary', (data) => {
       // data = this.mockService.get('getBrowseLibrary');
       if (data.navigation) {
         this.$log.debug('pushBrowseLibrary', data);
         this.lists = data.navigation.lists;
+        this.info = data.navigation.info;
 
         this.breadcrumbs = data.navigation.prev;
+        this.eject = data.navigation.eject;
+        this.rip = data.navigation.rip;
 
         this.$rootScope.$broadcast('browseService:fetchEnd');
       }
     });
+  }
+
+  getSourcesAlbumart(albumart) {
+    if (!albumart) {
+      return '';
+    }
+    if (~albumart.indexOf('http')) {
+      return albumart;
+    } else {
+      return `${this.socketService.host}${albumart}`;
+    }
   }
 
   initService() {

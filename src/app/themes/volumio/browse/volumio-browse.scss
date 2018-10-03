@@ -40,22 +40,9 @@
   margin-top: 6px;
 }
 
-#browseTableSources {
-  tr {
-    cursor: pointer;
-  }
-  td {
-    text-transform: capitalize;
-    padding-left: 10px;
-    height: 45px;
-    .info {
-      text-transform: none;
-    }
-  }
-}
-
 #browseTablesWrapper {
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .rowTitle {
@@ -71,9 +58,68 @@
   }
 }
 
+.rowInfo {
+  clear: both;
+  font-size: 18px;
+  padding: 5px 10px 5px 5px;
+  height: 100px!important;
+  overflow: hidden;
+  cursor: auto;
+  color: $theme-primary-color;
+  border-bottom: solid 1px $theme-primary-color;
+  background-color: $theme-dark-transparent-background;
+  i {
+    margin-right: 10px;
+  }
+  img {
+    float: left;
+    text-align: center;
+    width: 90px;
+    height: 90px;
+    margin-right: 10px;
+  }
+}
+
+.album-title {
+    font-weight: bold;
+    color: $theme-text-color;
+}
+
+.album-time {
+    font-size: 14px;
+    font-style: italic;
+    color: $theme-text-color;
+}
+
+.imageInfo {
+    float: left;
+    text-align: center;
+    width: 90px;
+    height: 90px;
+    margin-right: 10px;
+}
+
+.infoButton {
+    float: right;
+    /* padding-top: 8px; */
+    /* width: 35px; */
+    font-size: 60px;
+    vertical-align: middle;
+}
+
 .browseTable {
   .itemWrapper {
     cursor: pointer;
+  }
+
+  &.sourcesTable {
+    .listWrapper {
+      &.grid {
+        .description {
+          text-align: center;
+        }
+      }
+    }
   }
 
   .itemTab {
@@ -132,6 +178,14 @@
     }
   }
 
+  .info-title {
+    font-weight: bolder;
+    position: relative;
+    top: 50%;
+    height: 90%;
+    overflow: hidden;
+  }
+
   .commandButtons {
     float: right;
     padding-top: 8px;
@@ -140,7 +194,6 @@
     .dropdown-menu {
       left: auto;
       right: 10px;
-      visibility: hidden;
       &.right {
         left: 0;
         right: auto;
@@ -236,4 +289,8 @@
     }
   }
   //End grid overrides
+}
+
+.title.ng-binding {
+    height: 42px;
 }

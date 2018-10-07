@@ -1,11 +1,11 @@
 class BluetoothPluginController {
-  constructor($scope, socketService, mockService, $log, $translate) {
+  constructor($scope, socketService, mockService, $log, $translate, $interval) {
     'ngInject';
     this.socketService = socketService;
     this.$scope = $scope;
     this.$log = $log;
     this.$translate = $translate;
-    //this.wirelessNetworks = mockService.get('bluetoothDevices');
+    this.$interval = $interval;
     this.init();
   }
 
@@ -14,10 +14,18 @@ class BluetoothPluginController {
     this.initService();
   }
 
+  startScan() {
+    this.socketService.emit('callMethod', {
+      "endpoint" : "audio_interface/bluetooth_controller",
+      "method" : "startScan",
+      "data" : {}
+    });
+  }
+
   refreshBluetoothDevices() {
     this.socketService.emit('callMethod', {
       "endpoint" : "audio_interface/bluetooth_controller", 
-      "method" : "getBluetoothDevices", 
+      "method" : "getBluetoothDevices",
       "data" : {}
     });
   }
@@ -33,7 +41,8 @@ class BluetoothPluginController {
   }
 
   initService() {
-    this.refreshBluetoothDevices();
+    this.startScan();
+    this.$interval( () => { this.refreshBluetoothDevices(); }, 5000);
   }
 
   connectDevice(mac) {
@@ -41,8 +50,7 @@ class BluetoothPluginController {
       "endpoint" : "audio_interface/bluetooth_controller", 
       "method" : "connectBluetoothDevice",
       "data" : {mac}
-    }); 
-    this.refreshBluetoothDevices();
+    });
   }
 
   disconnectDevice(mac) {
@@ -51,7 +59,6 @@ class BluetoothPluginController {
       "method" : "disconnectBluetoothDevice",
       "data" : {mac}
     }); 
-    this.refreshBluetoothDevices();
   }
 }
 

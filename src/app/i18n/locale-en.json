@@ -237,7 +237,7 @@
     "COMPUTER":"Computer",
     "CONNECT":"Connect",
     "DISCONNECT":"Disconnect",
-    "REFRESH":"Refresh"
+    "SCAN":"Scan"
   },
   "MYVOLUMIO": {
     "MY_VOLUMIO": "MyVolumio (Beta)",

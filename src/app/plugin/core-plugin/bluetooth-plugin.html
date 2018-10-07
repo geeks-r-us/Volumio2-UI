@@ -1,4 +1,4 @@
-<div
+ <div
     id="bluetoothPlugin"
     ng-controller="BluetoothPluginController as bluetoothPlugin"
     class="panel panel-default">
@@ -48,9 +48,9 @@
     </table >
     
 
-    <button type="button" class="btn btn-info refreshBluetoothDevices" ng-click="bluetoothPlugin.refreshBluetoothDevices()">
-      <i class="fa fa-refresh" title="{{'BLUETOOTH.REFRESH' | translate}}"></i>
-      <span translate="BLUETOOTH.REFRESH"></span>
+    <button type="button" class="btn btn-info scanBluetoothDevices" ng-click="bluetoothPlugin.startScan()">
+      <i class="fa fa-refresh" title="{{'BLUETOOTH.SCAN' | translate}}"></i>
+      <span translate="BLUETOOTH.SCAN"></span>
     </button>
   </div>
 </div>

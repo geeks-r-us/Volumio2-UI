@@ -232,6 +232,13 @@
     "ANALOG_INPUT": "ANALOG INPUT",
     "BLUETOOTH": "BLUETOOTH"
   },
+  "BLUETOOTH": {
+    "AUDIO":"Audio Device",
+    "COMPUTER":"Computer",
+    "CONNECT":"Connect",
+    "DISCONNECT":"Disconnect",
+    "SCAN":"Scan"
+  },
   "MYVOLUMIO": {
     "MY_VOLUMIO": "MyVolumio (Beta)",
     "ERROR": "Error",
